@@ -16,7 +16,10 @@ export class Project{
 
     @Prop({type:Date, default:Date.now})
     createdAt: Date;
-
+    
+    @Prop({type:mongoose.Schema.Types.ObjectId, ref:'folders', required: true})
+    locatedInFolder: Folder
+    
     @Prop()
     modifiedAt: Date;
 
@@ -29,8 +32,6 @@ export class Project{
     @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref:'users'}]})
     colaborators: Array<User>;
 
-    @Prop({type:mongoose.Schema.Types.ObjectId, ref:'folders', required: true})
-    locatedInFolder: Folder
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
