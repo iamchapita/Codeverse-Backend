@@ -19,6 +19,11 @@ export class FoldersController {
         return this.foldersService.getFolderById(id);
     }
 
+    @Get('/:id/populated')
+    getFolderByIdPopulated(@Param('id') id: string): Promise<Folder>{
+        return this.foldersService.getFolderPopulated(id);
+    }
+
     @Put('/:id')
     updateFolderById(@Param('id') id: string, @Body() updateFolderDto: UpdateFolderDto): Promise<Folder>{
         return this.foldersService.updateFolder(id, updateFolderDto);
@@ -32,6 +37,14 @@ export class FoldersController {
         return this.foldersService.addProject(folderId, projectId);
     }
 
+    @Put('/:folderId/remove-project/:projectId')
+    removeProjectOfFolder(
+        @Param('folderId') folderId: string, 
+        @Param('projectId') projectId: string
+    ){
+        return this.foldersService.removeProject(folderId, projectId);
+    }
+
     @Put('/:folderId/add-folder/:otherFolderId')
     addFolderToFolder(
         @Param('folderId') folderId: string, 
@@ -40,12 +53,28 @@ export class FoldersController {
         return this.foldersService.addFolder(folderId, otherFolderId);
     }
 
+    @Put('/:folderId/remove-folder/:otherFolderId')
+    removeFolderOfFolder(
+        @Param('folderId') folderId: string, 
+        @Param('otherFolderId') otherFolderId: string
+    ){
+        return this.foldersService.removeFolder(folderId, otherFolderId);
+    }
+
     @Put('/:folderId/add-snippet/:snippetId')
     addSnippetToFolder(
         @Param('folderId') folderId: string,
         @Param('snippetId') snippetId: string
     ){
         return this.foldersService.addSnippet(folderId, snippetId);
+    }
+
+    @Put('/:folderId/remove-snippet/:snippetId')
+    removeSnippetOfFolder(
+        @Param('folderId') folderId: string,
+        @Param('snippetId') snippetId: string
+    ){
+        return this.foldersService.removeSnippet(folderId, snippetId);
     }
 
     @Delete('/:id')

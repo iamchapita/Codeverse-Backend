@@ -29,11 +29,22 @@ export class ProjectsService {
         )
     }
 
-    async addFile(id: string, projectId: string): Promise<Project>{
+    async addFile(id: string, fileId: string): Promise<Project>{
         return this.projectsModel.findByIdAndUpdate(
             id,
             {
-                $push: {files: projectId},
+                $push: {files: fileId},
+                modifiedAt: Date.now()
+            },
+            {new: true}
+        );
+    }
+
+    async removeFile(id: string, fileId: string): Promise<Project>{
+        return this.projectsModel.findByIdAndUpdate(
+            id,
+            {
+                $pull: {files: fileId},
                 modifiedAt: Date.now()
             },
             {new: true}
@@ -44,8 +55,17 @@ export class ProjectsService {
         return this.projectsModel.findByIdAndUpdate(
             id,
             {
-                $push: {colaborators: userId},
-                modifiedAt: Date.now()
+                $push: {colaborators: userId}
+            },
+            {new: true}
+        )
+    }
+
+    async removeColaborator(id: string, userId: string): Promise<Project>{
+        return this.projectsModel.findByIdAndUpdate(
+            id,
+            {
+                $pull: {colaborators: userId}
             },
             {new: true}
         )

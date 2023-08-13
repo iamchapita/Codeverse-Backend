@@ -21,6 +21,10 @@ export class FoldersService {
         return this.foldersModel.findById(id);
     }
 
+    async getFolderPopulated(id: string): Promise<Folder>{
+        return this.foldersModel.findById(id).populate('users projects folders snippets')
+    }
+
     async updateFolder(id: string, updateFolderDto: UpdateFolderDto): Promise<Folder>{
         return this.foldersModel.findByIdAndUpdate(
             id,
@@ -40,15 +44,37 @@ export class FoldersService {
         );
     }
 
-    async addFolder(id: string, projectId: string): Promise<Folder>{
+    async removeProject(id: string, projectId: string): Promise<Folder>{
         return this.foldersModel.findByIdAndUpdate(
             id,
             {
-                $push: {folders: new mongoose.mongo.ObjectId( projectId )},
+                $pull: {projects: new mongoose.Types.ObjectId( projectId )},
                 modifiedAt: Date.now()
             },
             {new: true}
         );
+    }
+
+    async addFolder(id: string, folderId: string): Promise<Folder>{
+        return this.foldersModel.findByIdAndUpdate(
+            id,
+            {
+                $push: {folders: new mongoose.mongo.ObjectId( folderId )},
+                modifiedAt: Date.now()
+            },
+            {new: true}
+        );
+    }
+
+    async removeFolder(id: string, folderId: string): Promise<Folder>{
+        return this.foldersModel.findByIdAndUpdate(
+            id,
+            {
+                $pull: {folders: folderId},
+                modifiedAt: Date.now()
+            },
+            {new: true}
+        )
     }
     
     async addSnippet(id: string, snippetId: string): Promise<Folder>{
@@ -56,6 +82,17 @@ export class FoldersService {
             id,
             {
                 $push: {snippets: snippetId},
+                modifiedAt: Date.now()
+            },
+            {new: true}
+        );
+    }
+
+    async removeSnippet(id: string, snippetId: string): Promise<Folder>{
+        return this.foldersModel.findByIdAndUpdate(
+            id,
+            {
+                $pull: {snippets: snippetId},
                 modifiedAt: Date.now()
             },
             {new: true}

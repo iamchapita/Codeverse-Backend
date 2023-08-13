@@ -31,7 +31,7 @@ export class ProjectsController {
         return this.projectsService.updateProject(id, updateProjectDto);
     }
 
-    @Put('/:projectId/:fileId')
+    @Put('/:projectId/add-file/:fileId')
     addFileToProject(
         @Param('projectId') projectId: string,
         @Param('fileId') fileId: string
@@ -39,12 +39,28 @@ export class ProjectsController {
         return this.projectsService.addFile(projectId, fileId);
     }
 
-    @Put('/:projectId/:userId')
+    @Put('/:projectId/remove-file/:fileId')
+    removeFileOfProject(
+        @Param('projectId') projectId: string,
+        @Param('fileId') fileId: string
+    ): Promise<Project>{
+        return this.projectsService.removeFile(projectId, fileId);
+    }
+
+    @Put('/:projectId/add-colab/:userId')
     addColaboratorToProject(
         @Param('projectId') projectId: string,
         @Param('userId') userId: string
     ): Promise<Project>{
         return this.projectsService.addColaborator(projectId, userId);
+    }
+
+    @Put('/:projectId/remove-colab/:userId')
+    removeColaboratorOfProject(
+        @Param('projectId') projectId: string,
+        @Param('userId') userId: string
+    ): Promise<Project>{
+        return this.projectsService.removeColaborator(projectId, userId);
     }
 
     @Delete('/:id')

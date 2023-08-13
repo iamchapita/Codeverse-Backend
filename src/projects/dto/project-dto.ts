@@ -13,7 +13,7 @@ export class UpdateProjectDto{
     readonly name: string;
     readonly description: string;
     readonly locatedInFolder: Folder;
-    readonly user: User;
-    readonly files: File[];
-    readonly colaborators: User[];
+    // readonly user: User;
+    // readonly files: File[];
+    // readonly colaborators: User[];
 }
