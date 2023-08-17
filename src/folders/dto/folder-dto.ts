@@ -7,12 +7,14 @@ export class CreateFolderDto{
     readonly name: string;
     readonly description: string;
     readonly user: User;
+    readonly parentFolder: string;
 }
 
 export class UpdateFolderDto{
     readonly name: string;
     readonly description: string;
     readonly user: User;
+    readonly parentFolder: string;
     readonly projects: Project[];
     readonly folders: Folder[];
     readonly snippets: Snippet[];
