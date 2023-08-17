@@ -73,7 +73,7 @@ export class FoldersService {
 		return await this.foldersModel.findByIdAndUpdate(
 			folderId,
 			{
-				$push: { parentFolder: new mongoose.mongo.ObjectId(id) },
+				parentFolder: new mongoose.mongo.ObjectId(id),
 				modifiedAt: Date.now(),
 			},
 			{ new: true }
