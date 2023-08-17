@@ -61,7 +61,7 @@ export class FoldersService {
 	}
 
 	async addFolder(id: string, folderId: string): Promise<Folder> {
-		this.foldersModel.findByIdAndUpdate(
+		await this.foldersModel.findByIdAndUpdate(
 			id,
 			{
 				$push: { folders: new mongoose.mongo.ObjectId(folderId) },
@@ -70,7 +70,7 @@ export class FoldersService {
 			{ new: true }
 		);
 
-		return this.foldersModel.findByIdAndUpdate(
+		return await this.foldersModel.findByIdAndUpdate(
 			folderId,
 			{
 				$push: { parentFolder: new mongoose.mongo.ObjectId(id) },
