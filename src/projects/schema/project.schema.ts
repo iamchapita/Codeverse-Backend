@@ -18,7 +18,8 @@ export class Project{
     createdAt: Date;
     
     @Prop({type:mongoose.Schema.Types.ObjectId, ref:'folders', required: true})
-    parentFolder: Folder
+    locatedInFolder: string;
+
     
     @Prop()
     modifiedAt: Date;

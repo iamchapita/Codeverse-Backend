@@ -3,17 +3,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Project } from './schema/project.schema';
 import { Model } from 'mongoose';
 import { CreateProjectDto, UpdateProjectDto } from './dto/project-dto';
+import { FoldersService } from 'src/folders/folders.service';
 
 @Injectable()
 export class ProjectsService {
     constructor(
         @InjectModel('projects')
-        private readonly projectsModel: Model<Project>
+        private readonly projectsModel: Model<Project>,
+        private folderService: FoldersService
     ){}
 
     async createProject(createProjectDto: CreateProjectDto): Promise<Project>{
         const project = new this.projectsModel(createProjectDto);
         await project.save();
+
+        await this.folderService.addProject(project.locatedInFolder, project.id);
         return project;
     }
 
@@ -72,6 +76,9 @@ export class ProjectsService {
     }
 
     async deleteProject(id: string): Promise<Project>{
-        return this.projectsModel.findByIdAndDelete(id);
+        const projectToBeDeleted = await this.getProjectById(id);
+
+        await this.folderService.removeProject(projectToBeDeleted.locatedInFolder, id);
+        return await this.projectsModel.findByIdAndDelete(id);
     }
 }

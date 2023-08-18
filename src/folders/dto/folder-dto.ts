@@ -4,6 +4,7 @@ import { Snippet } from "src/snippets/schema/snippet.schema";
 import { Project } from "src/projects/schema/project.schema";
 
 export class CreateFolderDto{
+    readonly _id: string;
     readonly name: string;
     readonly description: string;
     readonly user: User;
@@ -11,11 +12,9 @@ export class CreateFolderDto{
 }
 
 export class UpdateFolderDto{
+    readonly _id: string;
     readonly name: string;
     readonly description: string;
     readonly user: User;
     readonly parentFolder: string;
-    readonly projects: Project[];
-    readonly folders: Folder[];
-    readonly snippets: Snippet[];
 }
