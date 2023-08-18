@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Folder } from './schema/folder.schema';
-import mongoose, { Model } from 'mongoose';
-import { CreateFolderDto, UpdateFolderDto } from './dto/folder-dto';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Folder } from "./schema/folder.schema";
+import mongoose, { Model } from "mongoose";
+import { CreateFolderDto, UpdateFolderDto } from "./dto/folder-dto";
 
 @Injectable()
 export class FoldersService {
-    constructor(
-        @InjectModel('folders')
-        private readonly foldersModel: Model<Folder>
-    ){}
+	constructor(
+		@InjectModel("folders")
+		private readonly foldersModel: Model<Folder>
+	) {}
 
     async createFolder(createFolderDto: CreateFolderDto): Promise<Folder>{
         const folder = new this.foldersModel(createFolderDto);
