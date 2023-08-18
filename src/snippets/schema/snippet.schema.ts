@@ -15,6 +15,9 @@ export class Snippet{
     @Prop({type:mongoose.Schema.Types.ObjectId, ref:'users', required: true})
     user: User;
 
+    @Prop({type:mongoose.Schema.Types.ObjectId, ref:'folders', required: true})
+    locatedInFolder: string;
+
     @Prop({type:Date, default:Date.now})
     createdAt: Date;
 

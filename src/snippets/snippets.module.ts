@@ -4,11 +4,13 @@ import { SnippetsController } from './snippets.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SnippetSchema } from './schema/snippet.schema';
 import { UsersModule } from 'src/users/users.module';
+import { FoldersModule } from 'src/folders/folders.module';
 
 @Module({
   imports:[
     UsersModule,
-    MongooseModule.forFeature([{name: 'snippets', schema:SnippetSchema}])
+    MongooseModule.forFeature([{name: 'snippets', schema:SnippetSchema}]),
+    FoldersModule
   ],
   providers: [SnippetsService],
   exports:[SnippetsService],
