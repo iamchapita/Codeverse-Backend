@@ -13,7 +13,7 @@ export class Folder{
     description: string;
 
     @Prop({type:mongoose.Schema.Types.ObjectId, ref: 'folders'})
-    parentFolder: Folder;
+    parentFolder: string;
 
     @Prop({type:Date, default:Date.now})
     createdAt: Date;

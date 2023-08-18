@@ -14,27 +14,30 @@ export class FoldersService {
     async createFolder(createFolderDto: CreateFolderDto): Promise<Folder>{
         const folder = new this.foldersModel(createFolderDto);
         await folder.save();
+
+        await this.addFolder(folder.parentFolder, folder.id);
         return folder;
     }
 
     async getFolderById(id: string): Promise<Folder>{
-        return this.foldersModel.findById(id);
+        return await this.foldersModel.findById(id);
     }
 
     async getFolderPopulated(id: string): Promise<Folder>{
-        return this.foldersModel.findById(id).populate('users projects folders snippets')
+        return await this.foldersModel.findById(id).populate('users projects folders snippets')
     }
 
     async updateFolder(id: string, updateFolderDto: UpdateFolderDto): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        const folder = await this.foldersModel.findByIdAndUpdate(
             id,
             {updateFolderDto, modifiedAt: Date.now()},
             {new: true}
         );
+        return folder; 
     }
 
     async addProject(id: string, projectId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $push: {projects: new mongoose.Types.ObjectId( projectId )},
@@ -45,7 +48,7 @@ export class FoldersService {
     }
 
     async removeProject(id: string, projectId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $pull: {projects: new mongoose.Types.ObjectId( projectId )},
@@ -56,7 +59,7 @@ export class FoldersService {
     }
 
     async addFolder(id: string, folderId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $push: {folders: new mongoose.mongo.ObjectId( folderId )},
@@ -67,7 +70,7 @@ export class FoldersService {
     }
 
     async removeFolder(id: string, folderId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $pull: {folders: folderId},
@@ -78,7 +81,7 @@ export class FoldersService {
     }
     
     async addSnippet(id: string, snippetId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $push: {snippets: snippetId},
@@ -89,7 +92,7 @@ export class FoldersService {
     }
 
     async removeSnippet(id: string, snippetId: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndUpdate(
+        return await this.foldersModel.findByIdAndUpdate(
             id,
             {
                 $pull: {snippets: snippetId},
@@ -100,6 +103,9 @@ export class FoldersService {
     }
 
     async deteleFolder(id: string): Promise<Folder>{
-        return this.foldersModel.findByIdAndDelete(id);
+        const folderToBeDeleted = await this.getFolderById(id);
+        //comprobar folders hijos
+        await this.removeFolder(folderToBeDeleted.parentFolder, id);
+        return await this.foldersModel.findByIdAndDelete(id);
     }
 }
