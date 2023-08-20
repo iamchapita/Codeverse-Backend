@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Project } from './schema/project.schema';
 import { Model } from 'mongoose';
 import { CreateProjectDto, UpdateProjectDto } from './dto/project-dto';
 import { FoldersService } from 'src/folders/folders.service';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class ProjectsService {
     constructor(
         @InjectModel('projects')
         private readonly projectsModel: Model<Project>,
+        private filesService: FilesService,
+        @Inject(forwardRef(()=> FoldersService))
         private folderService: FoldersService
     ){}
 
@@ -22,11 +25,11 @@ export class ProjectsService {
     }
 
     async getProjectById(id: string): Promise<Project>{
-        return this.projectsModel.findById(id);
+        return await this.projectsModel.findById(id);
     }
 
     async updateProject(id: string, updateProjectDto: UpdateProjectDto): Promise<Project>{
-        return this.projectsModel.findByIdAndUpdate(
+        return await this.projectsModel.findByIdAndUpdate(
             id,
             {updateProjectDto, modifiedAt: Date.now()},
             {new: true}
@@ -34,7 +37,7 @@ export class ProjectsService {
     }
 
     async addFile(id: string, fileId: string): Promise<Project>{
-        return this.projectsModel.findByIdAndUpdate(
+        return await this.projectsModel.findByIdAndUpdate(
             id,
             {
                 $push: {files: fileId},
@@ -45,7 +48,8 @@ export class ProjectsService {
     }
 
     async removeFile(id: string, fileId: string): Promise<Project>{
-        return this.projectsModel.findByIdAndUpdate(
+        await this.filesService.deleteFile(fileId);
+        return await this.projectsModel.findByIdAndUpdate(
             id,
             {
                 $pull: {files: fileId},
@@ -56,7 +60,7 @@ export class ProjectsService {
     }
 
     async addColaborator(id: string, userId: string): Promise<Project>{
-        return this.projectsModel.findByIdAndUpdate(
+        return await this.projectsModel.findByIdAndUpdate(
             id,
             {
                 $push: {colaborators: userId}
@@ -66,7 +70,7 @@ export class ProjectsService {
     }
 
     async removeColaborator(id: string, userId: string): Promise<Project>{
-        return this.projectsModel.findByIdAndUpdate(
+        return await this.projectsModel.findByIdAndUpdate(
             id,
             {
                 $pull: {colaborators: userId}
@@ -77,8 +81,14 @@ export class ProjectsService {
 
     async deleteProject(id: string): Promise<Project>{
         const projectToBeDeleted = await this.getProjectById(id);
-
+        if(!projectToBeDeleted) 
+            return;
+        //eliminar files hijos
+        if(projectToBeDeleted.files.length > 0)
+            await this.filesService.deleteManyFiles(projectToBeDeleted.files);
+        //eliminar id de proyecto del folder
         await this.folderService.removeProject(projectToBeDeleted.locatedInFolder, id);
+
         return await this.projectsModel.findByIdAndDelete(id);
     }
 }

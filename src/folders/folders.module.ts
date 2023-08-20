@@ -1,14 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { FoldersService } from './folders.service';
 import { FoldersController } from './folders.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FolderSchema } from './schema/folder.schema';
-import { UsersModule } from 'src/users/users.module';
+import { Folder, FolderSchema } from './schema/folder.schema';
+import { ProjectsModule } from 'src/projects/projects.module';
+import { SnippetsModule } from 'src/snippets/snippets.module';
 
 @Module({
   imports:[
     MongooseModule.forFeature( [{name:'folders', schema:FolderSchema}] ),
-    UsersModule
+    forwardRef(()=> SnippetsModule),
+    forwardRef(()=> ProjectsModule)
   ],
   providers: [FoldersService],
   exports: [FoldersService],

@@ -32,4 +32,12 @@ export class FilesService {
     async deleteFile(id: string): Promise<File>{
         return this.filesModel.findByIdAndDelete(id);
     }
+
+    async deleteManyFiles(ids: string[]) {
+        await this.filesModel.deleteMany(
+            {
+                _id: {$in: ids}
+            }
+        )
+    }
 }
