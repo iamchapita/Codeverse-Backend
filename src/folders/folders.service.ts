@@ -1,20 +1,14 @@
-import { Injectable, Inject, forwardRef } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Folder } from "./schema/folder.schema";
 import mongoose, { Model } from "mongoose";
 import { CreateFolderDto, UpdateFolderDto } from "./dto/folder-dto";
-import { Project } from "src/projects/schema/project.schema";
-import { Snippet } from "src/snippets/schema/snippet.schema";
-import { SnippetsService } from "src/snippets/snippets.service";
-import { ProjectsService } from "src/projects/projects.service";
 
 @Injectable()
 export class FoldersService {
 	constructor(
 		@InjectModel("folders")
-		private readonly foldersModel: Model<Folder>,
-        private readonly snippetsService: SnippetsService,
-        private readonly projectsService: ProjectsService
+		private readonly foldersModel: Model<Folder>
 	) {}
 
     async createFolder(createFolderDto: CreateFolderDto): Promise<Folder>{
@@ -54,7 +48,6 @@ export class FoldersService {
     }
 
     async removeProject(id: string, projectId: string): Promise<Folder>{
-        await this.projectsService.deleteProject(projectId);
         return await this.foldersModel.findByIdAndUpdate(
             id,
             {
@@ -77,7 +70,6 @@ export class FoldersService {
     }
 
     async removeFolder(id: string, folderId: string): Promise<Folder>{
-        await this.deteleFolder(folderId);
         return await this.foldersModel.findByIdAndUpdate(
             id,
             {
@@ -100,7 +92,6 @@ export class FoldersService {
     }
 
     async removeSnippet(id: string, snippetId: string): Promise<Folder>{
-        await this.snippetsService.deleteSnippet(snippetId);
         return await this.foldersModel.findByIdAndUpdate(
             id,
             {
@@ -111,36 +102,10 @@ export class FoldersService {
         );
     }
 
-    
-
     async deteleFolder(id: string): Promise<Folder>{
         const folderToBeDeleted = await this.getFolderById(id);
-        if(!folderToBeDeleted)
-            return;
-        //-----------------------------------------
-        //eliminar projects hijos
-        
-        //eliminar snippets hijos
-        if(folderToBeDeleted.snippets.length > 0)
-            await this.snippetsService.deleteManySnippets(folderToBeDeleted.snippets);
-        
-        //eliminar folders hijos
-        if(folderToBeDeleted.folders.length > 0)
-            await this.deleteManyFolders(folderToBeDeleted.folders);
-        //-----------------------------------------
+        //comprobar folders hijos
         await this.removeFolder(folderToBeDeleted.parentFolder, id);
-        // return await this.foldersModel.findByIdAndDelete(id);
-        return await this.foldersModel.findOneAndDelete({_id: id});
-        
+        return await this.foldersModel.findByIdAndDelete(id);
     }
-
-    // error de logica al dejar sueltos los childDocuments otra implemtacion? podria ser un proceso muuuy lento
-    async deleteManyFolders(ids: string[]){
-        return await this.foldersModel.deleteMany(
-            {
-                _id: {$in: ids}
-            }
-        )
-    }
- 
 }

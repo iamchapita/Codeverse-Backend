@@ -28,7 +28,7 @@ export class Project{
     user: User;
 
     @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref:'files'}]})
-    files: Array<string>;
+    files: Array<File>;
 
     @Prop({type:[{type: mongoose.Schema.Types.ObjectId, ref:'users'}]})
     colaborators: Array<User>;

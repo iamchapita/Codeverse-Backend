@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SnippetsService } from './snippets.service';
 import { SnippetsController } from './snippets.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,7 +10,7 @@ import { FoldersModule } from 'src/folders/folders.module';
   imports:[
     UsersModule,
     MongooseModule.forFeature([{name: 'snippets', schema:SnippetSchema}]),
-    forwardRef(()=> FoldersModule)
+    FoldersModule
   ],
   providers: [SnippetsService],
   exports:[SnippetsService],

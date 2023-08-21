@@ -25,16 +25,13 @@ export class Folder{
     user: User;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId, ref: 'projects'}], default:[]})
-    projects: Array<string>;
+    projects: Array<Project>;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId, ref: 'folders'}], default:[]})
-    folders: Array<string>;
+    folders: Array<Folder>;
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId, ref: 'snippets'}], default: []})
-    snippets: Array<string>
+    snippets: Array<Snippet>
 }
 
-const FolderSchema = SchemaFactory.createForClass(Folder);
-const FolderModel = mongoose.model('folders', FolderSchema);
-
-export { FolderSchema, FolderModel};
+export const FolderSchema = SchemaFactory.createForClass(Folder);
