@@ -134,7 +134,7 @@ export class FoldersService {
         
     }
 
-    // error de logica al dejar sueltos los childDocuments otra implemtacion? podria ser un proceso muuuy lento
+    // detalle con anidados
     async deleteManyFolders(ids: string[]){
         return await this.foldersModel.deleteMany(
             {
