@@ -38,4 +38,5 @@ lerna-debug.log*
 *.env
 
 #private string
-/src/mongodb-connection/mongodb-connection.module.ts
+
+src/mongodb-connection/mongodb-connection.module.ts
