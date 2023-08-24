@@ -91,4 +91,12 @@ export class ProjectsService {
 
         return await this.projectsModel.findByIdAndDelete(id);
     }
+
+    async deleteManyProjects(ids: string[]){
+         await this.projectsModel.deleteMany(
+            {
+                _id: {$in: ids}
+            }
+        )
+    }
 }

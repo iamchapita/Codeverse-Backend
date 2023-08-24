@@ -111,14 +111,14 @@ export class FoldersService {
         );
     }
 
-    
-
     async deteleFolder(id: string): Promise<Folder>{
         const folderToBeDeleted = await this.getFolderById(id);
         if(!folderToBeDeleted)
             return;
         //-----------------------------------------
         //eliminar projects hijos
+        if(folderToBeDeleted.folders.length > 0)
+            await this.projectsService.deleteManyProjects(folderToBeDeleted.projects);
         
         //eliminar snippets hijos
         if(folderToBeDeleted.snippets.length > 0)
@@ -130,7 +130,7 @@ export class FoldersService {
         //-----------------------------------------
         await this.removeFolder(folderToBeDeleted.parentFolder, id);
         // return await this.foldersModel.findByIdAndDelete(id);
-        return await this.foldersModel.findOneAndDelete({_id: id});
+        return await this.foldersModel.findByIdAndDelete(id);
         
     }
 
