@@ -26,7 +26,7 @@ export class UsersService {
 	}
 
 	async getUserByUid(uid: string): Promise<User | null> {
-		return this.usersModel.findOne({ uid });
+		return this.usersModel.findOne({ uid }).exec();
 	}
 
 	async deleteUserById(id: string): Promise<User> {

@@ -31,7 +31,7 @@ export class UsersController {
 	}
 
 	@Get("/uid/:uid")
-	getUserByUid(@Param("uid") uid: string): Promise<User> {
+	getUserByUid(@Param("uid") uid: string): Promise<User | null> {
 		return this.usersService.getUserByUid(uid);
 	}
 
