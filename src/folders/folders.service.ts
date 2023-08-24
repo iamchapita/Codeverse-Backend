@@ -23,6 +23,10 @@ export class FoldersService {
 		return await this.foldersModel.findById(id);
 	}
 
+	async getFolderByUserId(id: string): Promise<Folder | null> {
+		return await this.foldersModel.findOne({ user: id });
+	}
+
 	async getFolderPopulated(id: string): Promise<Folder> {
 		return await this.foldersModel
 			.findById(id)

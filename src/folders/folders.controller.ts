@@ -17,6 +17,11 @@ export class FoldersController {
     @Get('/:id')
     getFolderById(@Param('id') id: string): Promise<Folder>{
         return this.foldersService.getFolderById(id);
+    } 
+    
+    @Get('/user/:id')
+    getFolderByUserId(@Param('id') id: string): Promise<Folder>{
+        return this.foldersService.getFolderByUserId(id);
     }
 
     @Get('/:id/populated')
