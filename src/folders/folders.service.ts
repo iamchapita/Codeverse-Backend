@@ -23,6 +23,28 @@ export class FoldersService {
 		return await this.foldersModel.findById(id);
 	}
 
+	async getFolderChilds(id: string): Promise<Array<Folder>> {
+		const parentFolder = await this.foldersModel.findById(id);
+
+		if (!parentFolder) {
+			return [];
+		} else {
+			const childFolders: Array<Folder> = [];
+			// const childFolders: Array<Folder> = [] = parentFolder.folders;
+
+			await Promise.all(
+				parentFolder.folders.map(async (folder: any) => {
+					const childFolder = await this.getFolderById(folder._id);
+					if (childFolder) {
+						childFolders.push(...[childFolder]);
+					}
+				})
+			);
+
+			return childFolders;
+		}
+	}
+
 	async getFolderByUserId(id: string): Promise<Folder | null> {
 		return await this.foldersModel.findOne({ user: id });
 	}
@@ -46,14 +68,16 @@ export class FoldersService {
 	}
 
 	async addProject(id: string, projectId: string): Promise<Folder> {
-		return await this.foldersModel.findByIdAndUpdate(
-			id,
-			{
-				$push: { projects: new mongoose.Types.ObjectId(projectId) },
-				modifiedAt: Date.now(),
-			},
-			{ new: true }
-		).exec();
+		return await this.foldersModel
+			.findByIdAndUpdate(
+				id,
+				{
+					$push: { projects: new mongoose.Types.ObjectId(projectId) },
+					modifiedAt: Date.now(),
+				},
+				{ new: true }
+			)
+			.exec();
 	}
 
 	async removeProject(id: string, projectId: string): Promise<Folder> {
