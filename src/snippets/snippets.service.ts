@@ -18,7 +18,7 @@ export class SnippetsService {
         const snippet = new this.snippetsModel(createSnippetDto);
         await snippet.save();
 
-        await this.folderService.addSnippet(snippet.locatedInFolder, snippet.id);
+        await this.folderService.addSnippet(snippet.parentFolder, snippet.id);
         return snippet;
     }
 
@@ -45,7 +45,7 @@ export class SnippetsService {
     async deleteSnippet(id: string): Promise<Snippet>{
         const snippetToBeDeleted = await this.getSnippetById(id);
 
-        await this.folderService.removeSnippet(snippetToBeDeleted.locatedInFolder, id);
+        await this.folderService.removeSnippet(snippetToBeDeleted.parentFolder, id);
         return await this.snippetsModel.findByIdAndDelete(id);
     }
 }

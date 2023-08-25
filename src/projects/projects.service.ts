@@ -17,7 +17,7 @@ export class ProjectsService {
         const project = new this.projectsModel(createProjectDto);
         await project.save();
 
-        await this.folderService.addProject(project.locatedInFolder, project.id);
+        await this.folderService.addProject(project.parentFolder, project.id);
         return project;
     }
 
@@ -78,7 +78,7 @@ export class ProjectsService {
     async deleteProject(id: string): Promise<Project>{
         const projectToBeDeleted = await this.getProjectById(id);
 
-        await this.folderService.removeProject(projectToBeDeleted.locatedInFolder, id);
+        await this.folderService.removeProject(projectToBeDeleted.parentFolder, id);
         return await this.projectsModel.findByIdAndDelete(id);
     }
 }

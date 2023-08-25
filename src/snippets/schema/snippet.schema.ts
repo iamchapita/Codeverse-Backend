@@ -16,7 +16,7 @@ export class Snippet{
     user: User;
 
     @Prop({type:mongoose.Schema.Types.ObjectId, ref:'folders', required: true})
-    locatedInFolder: string;
+    parentFolder: string;
 
     @Prop({type:Date, default:Date.now})
     createdAt: Date;
