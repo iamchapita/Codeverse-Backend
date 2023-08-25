@@ -53,7 +53,7 @@ export class FoldersService {
 				modifiedAt: Date.now(),
 			},
 			{ new: true }
-		);
+		).exec();
 	}
 
 	async removeProject(id: string, projectId: string): Promise<Folder> {
