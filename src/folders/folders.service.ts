@@ -30,7 +30,6 @@ export class FoldersService {
 			return [];
 		} else {
 			const childFolders: Array<Folder> = [];
-			// const childFolders: Array<Folder> = [] = parentFolder.folders;
 
 			await Promise.all(
 				parentFolder.folders.map(async (folder: any) => {
