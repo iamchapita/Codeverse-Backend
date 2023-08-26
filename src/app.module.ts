@@ -16,7 +16,7 @@ import { UsersModule } from './users/users.module';
       envFilePath: '.env',
       isGlobal: true
     }),
-    MongooseModule.forRoot(process.env.MONGO_OP),
+    MongooseModule.forRoot('mongodb+srv://codeadmin:2rOsaRWrvF2sxDbS@codeverse-cluster.ajx9zkm.mongodb.net/codeverse?retryWrites=true&w=majority'),
     ProjectsModule,
     FilesModule,
     UsersModule,
