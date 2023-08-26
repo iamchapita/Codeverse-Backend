@@ -134,10 +134,39 @@ export class FoldersService {
 		);
 	}
 
-	async deteleFolder(id: string): Promise<Folder> {
+	// !Necesito borrar
+	// !Folders
+	// !Projects
+	// !Snippets
+
+	async deleteFolder(id: string): Promise<void> {
+		// Paso 1: Obtener la carpeta que se va a eliminar
 		const folderToBeDeleted = await this.getFolderById(id);
-		//comprobar folders hijos
-		await this.removeFolder(folderToBeDeleted.parentFolder, id);
-		return await this.foldersModel.findByIdAndDelete(id);
+
+		// Paso 2: Verificar si la carpeta tiene subcarpetas
+		if (
+			folderToBeDeleted !== null &&
+			folderToBeDeleted.folders.length !== 0
+		) {
+			// Paso 3: Eliminar subcarpetas de forma recursiva
+			await Promise.all(
+				folderToBeDeleted.folders.map(async (folder: any) => {
+					await this.deleteFolder(folder._id);
+				})
+			);
+
+			// Paso 4: Obtener el id de la carpeta padre
+			const parentFolderId = folderToBeDeleted.parentFolder;
+
+			// Paso 5: Eliminar el id de la carpeta actual del arreglo de folders en el parentFolder
+			await this.foldersModel.findByIdAndUpdate(
+				parentFolderId,
+				{ $pull: { folders: id } },
+				{ new: true }
+			);
+		}
+
+		// Paso 6: Eliminar la carpeta actual
+		await this.foldersModel.findByIdAndDelete(id);
 	}
 }
