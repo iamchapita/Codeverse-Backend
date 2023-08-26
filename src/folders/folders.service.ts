@@ -161,23 +161,23 @@ export class FoldersService {
 				})
 			);
 
-			// Paso 4: Eliminar (si existen) projectos de forma recursiva
-			if( folderToBeDeleted.projects.length !== 0 ){
-				await Promise.all(
-					folderToBeDeleted.projects.map(async (project: any) => {
-						await this.projectService.deleteProject(project._id);
-					})
-				);
-			}
+			// // Paso 4: Eliminar (si existen) projectos de forma recursiva
+			// if( folderToBeDeleted.projects.length !== 0 ){
+			// 	await Promise.all(
+			// 		folderToBeDeleted.projects.map(async (project: any) => {
+			// 			await this.projectService.deleteProject(project._id);
+			// 		})
+			// 	);
+			// }
 
-			// Paso 5: Eliminar (si existen) snippets de forma recursiva
-			if( folderToBeDeleted.snippets.length !== 0 ){
-				await Promise.all(
-					folderToBeDeleted.snippets.map(async (snippet: any) => {
-						await this.snippetsService.deleteSnippet(snippet._id);
-					})
-				);
-			}
+			// // Paso 5: Eliminar (si existen) snippets de forma recursiva
+			// if( folderToBeDeleted.snippets.length !== 0 ){
+			// 	await Promise.all(
+			// 		folderToBeDeleted.snippets.map(async (snippet: any) => {
+			// 			await this.snippetsService.deleteSnippet(snippet._id);
+			// 		})
+			// 	);
+			// }
 
 			// Paso 6: Obtener el id de la carpeta padre
 			const parentFolderId = folderToBeDeleted.parentFolder;
