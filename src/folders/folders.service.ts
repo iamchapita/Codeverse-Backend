@@ -3,12 +3,16 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Folder } from "./schema/folder.schema";
 import mongoose, { Model } from "mongoose";
 import { CreateFolderDto, UpdateFolderDto } from "./dto/folder-dto";
+import { ProjectsService } from "src/projects/projects.service";
+import { SnippetsService } from "src/snippets/snippets.service";
 
 @Injectable()
 export class FoldersService {
 	constructor(
 		@InjectModel("folders")
-		private readonly foldersModel: Model<Folder>
+		private readonly foldersModel: Model<Folder>,
+		private readonly projectService: ProjectsService,
+		private readonly snippetsService: SnippetsService
 	) {}
 
 	async createFolder(createFolderDto: CreateFolderDto): Promise<Folder> {
@@ -80,6 +84,7 @@ export class FoldersService {
 	}
 
 	async removeProject(id: string, projectId: string): Promise<Folder> {
+		await this.projectService.deleteProject(projectId);
 		return await this.foldersModel.findByIdAndUpdate(
 			id,
 			{
@@ -145,20 +150,39 @@ export class FoldersService {
 
 		// Paso 2: Verificar si la carpeta tiene subcarpetas
 		if (
-			folderToBeDeleted !== null &&
-			folderToBeDeleted.folders.length !== 0
+			folderToBeDeleted !== null
 		) {
-			// Paso 3: Eliminar subcarpetas de forma recursiva
+
+			// Paso 3: Eliminar (si existen) subcarpetas de forma recursiva
+			if( folderToBeDeleted.folders.length !== 0 )
 			await Promise.all(
 				folderToBeDeleted.folders.map(async (folder: any) => {
 					await this.deleteFolder(folder._id);
 				})
 			);
 
-			// Paso 4: Obtener el id de la carpeta padre
+			// Paso 4: Eliminar (si existen) projectos de forma recursiva
+			if( folderToBeDeleted.projects.length !== 0 ){
+				await Promise.all(
+					folderToBeDeleted.projects.map(async (project: any) => {
+						await this.projectService.deleteProject(project._id);
+					})
+				);
+			}
+
+			// Paso 5: Eliminar (si existen) snippets de forma recursiva
+			if( folderToBeDeleted.snippets.length !== 0 ){
+				await Promise.all(
+					folderToBeDeleted.snippets.map(async (snippet: any) => {
+						await this.snippetsService.deleteSnippet(snippet._id);
+					})
+				);
+			}
+
+			// Paso 6: Obtener el id de la carpeta padre
 			const parentFolderId = folderToBeDeleted.parentFolder;
 
-			// Paso 5: Eliminar el id de la carpeta actual del arreglo de folders en el parentFolder
+			// Paso 7: Eliminar el id de la carpeta actual del arreglo de folders en el parentFolder
 			await this.foldersModel.findByIdAndUpdate(
 				parentFolderId,
 				{ $pull: { folders: id } },
@@ -166,7 +190,7 @@ export class FoldersService {
 			);
 		}
 
-		// Paso 6: Eliminar la carpeta actual
+		// Paso 8: Eliminar la carpeta actual
 		await this.foldersModel.findByIdAndDelete(id);
 	}
 }

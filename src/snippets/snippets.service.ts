@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { Snippet } from './schema/snippet.schema';
@@ -10,7 +10,8 @@ export class SnippetsService {
     constructor(
         @InjectModel('snippets')
         private readonly snippetsModel: Model<Snippet>,
-        private folderService: FoldersService
+        @Inject(forwardRef(()=> FoldersService))
+		private folderService: FoldersService
     ){}
 
     //Create

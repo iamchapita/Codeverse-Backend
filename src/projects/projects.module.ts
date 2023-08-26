@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { ProjectsService } from "./projects.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ProjectSchema } from "./schema/project.schema";
@@ -11,7 +11,7 @@ import { FilesModule } from "src/files/files.module";
 		MongooseModule.forFeature([
 			{ name: "projects", schema: ProjectSchema },
 		]),
-		FoldersModule,
+		forwardRef(()=>FoldersModule),
 		FilesModule,
 	],
 	providers: [ProjectsService],
