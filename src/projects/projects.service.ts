@@ -11,7 +11,7 @@ export class ProjectsService {
 	constructor(
 		@InjectModel("projects")
 		private readonly projectsModel: Model<Project>,
-		@Inject(forwardRef(()=> FoldersService))
+		@Inject(forwardRef(() => FoldersService))
 		private folderService: FoldersService,
 		private fileService: FilesService
 	) {}
@@ -84,16 +84,11 @@ export class ProjectsService {
 	async deleteProject(id: string): Promise<Project> {
 		const projectToBeDeleted = await this.getProjectById(id);
 
-		if (
-			projectToBeDeleted !== null &&
-			projectToBeDeleted.files.length !== 0
-		) {
-			await Promise.all(
-				projectToBeDeleted.files.map(async (file: any) => {
-					await this.fileService.deleteFile(file);
-				})
-			);
-		}
+		await Promise.all(
+			projectToBeDeleted.files.map(async (file: any) => {
+				await this.fileService.deleteFile(file);
+			})
+		);
 
 		return await this.projectsModel.findByIdAndDelete(id);
 	}
