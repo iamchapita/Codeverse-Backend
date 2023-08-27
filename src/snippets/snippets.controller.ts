@@ -39,7 +39,7 @@ export class SnippetsController {
 	}
 
 	@Delete(":id")
-	delete(@Param("id") id: string) {
-		this.snippetsService.deleteSnippet(id);
+	delete(@Param("id") id: string): Promise<Snippet> {
+		return this.snippetsService.deleteSnippet(id);
 	}
 }

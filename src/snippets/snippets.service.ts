@@ -43,13 +43,13 @@ export class SnippetsService {
 	}
 
 	//delete
-	async deleteSnippet(id: string): Promise<void> {
+	async deleteSnippet(id: string): Promise<Snippet> {
 		const snippetToBeDeleted = await this.getSnippetById(id);
 
 		await this.folderService.removeSnippet(
 			snippetToBeDeleted.parentFolder,
 			id
 		);
-		await this.snippetsModel.findByIdAndDelete(id);
+		return await this.snippetsModel.findByIdAndDelete(id);
 	}
 }
