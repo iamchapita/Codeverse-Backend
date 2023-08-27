@@ -11,6 +11,9 @@ export class Snippet {
 	@Prop()
 	code: string;
 
+	@Prop()
+	name: string;
+
 	@Prop({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "users",
