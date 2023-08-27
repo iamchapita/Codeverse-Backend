@@ -34,9 +34,4 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Enviroments
 *.env
-
-#private string
-
-src/mongodb-connection/mongodb-connection.module.ts
