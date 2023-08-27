@@ -9,7 +9,7 @@ async function bootstrap() {
 		allowedHeaders: "Content-Type, Accept",
 		exposedHeaders: "Custom-Header",
 		optionsSuccessStatus: 200,
-		preflightContinue: true,
+		preflightContinue: false,
 		credentials: true,
 	});
 	await app.listen(3000);
