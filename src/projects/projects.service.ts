@@ -81,7 +81,7 @@ export class ProjectsService {
 		);
 	}
 
-	async deleteProject(id: string): Promise<Project> {
+	async deleteProject(id: string): Promise<void> {
 		const projectToBeDeleted = await this.getProjectById(id);
 
 		await Promise.all(
@@ -90,6 +90,6 @@ export class ProjectsService {
 			})
 		);
 
-		return await this.projectsModel.findByIdAndDelete(id);
+		await this.projectsModel.findByIdAndDelete(id);
 	}
 }
