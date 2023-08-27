@@ -154,15 +154,15 @@ export class FoldersService {
 			if (folderToBeDeleted.folders.length !== 0)
 				await Promise.all(
 					folderToBeDeleted.folders.map(async (folder: any) => {
-						await this.deleteFolder(folder._id);
+						this.deleteFolder(folder._id);
 					})
 				);
 
 			// Paso 4: Eliminar (si existen) projectos de forma recursiva
 			if (folderToBeDeleted.projects.length !== 0) {
 				await Promise.all(
-					folderToBeDeleted.projects.map(async (project: any) => {
-						await this.projectService.deleteProject(project._id);
+					folderToBeDeleted.projects.map((project: any) => {
+						this.projectService.deleteProject(project._id);
 					})
 				);
 			}
@@ -170,8 +170,8 @@ export class FoldersService {
 			// Paso 5: Eliminar (si existen) snippets de forma recursiva
 			if (folderToBeDeleted.snippets.length !== 0) {
 				await Promise.all(
-					folderToBeDeleted.snippets.map(async (snippet: any) => {
-						await this.snippetsService.deleteSnippet(snippet._id);
+					folderToBeDeleted.snippets.map((snippet: any) => {
+						this.snippetsService.deleteSnippet(snippet._id);
 					})
 				);
 			}
